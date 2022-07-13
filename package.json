@@ -1,0 +1,44 @@
+{
+  "name": "3d-renderer",
+  "version": "1.0.0",
+  "description": "自制3d渲染器",
+  "main": "index.js",
+  "scripts": {
+    "serve": "npm run build && cross-env NODE_ENV=development webpack-dev-server --inline --content-base ./dist",
+    "build": "cross-env NODE_ENV=development webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex10151/3d-renderer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alex10151/3d-renderer/issues"
+  },
+  "homepage": "https://github.com/alex10151/3d-renderer#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.1.0",
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "awesome-typescript-loader": "^4.0.0",
+    "babel-loader": "^8.0.2",
+    "cross-env": "^7.0.3",
+    "css-loader": "^1.0.0",
+    "html-loader": "^4.1.0",
+    "html-webpack-plugin": "^4.0.0",
+    "loader-utils": "^3.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "style-loader": "^0.23.0",
+    "ts-loader": "^8.2.1",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.8"
+  }
+}
