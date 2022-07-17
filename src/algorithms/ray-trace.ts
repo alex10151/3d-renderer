@@ -40,7 +40,7 @@ const vector = (p1: Point, p2: Point): Vector => {
   return {
     x: p2.x - p1.x,
     y: p2.y - p1.y,
-    z: p2.z - p2.z,
+    z: p2.z - p1.z,
   };
 };
 /**
@@ -115,15 +115,14 @@ const getIntersectionSphere = (
   sphere: Sphere,
 ) => {
   const r = sphere.radius;
-  const vecCenterToOrigin = vector(origin, sphere.center);
+  const vecOriginToCenter = vector(origin, sphere.center);
 
   const a = dot(direct, direct);
-  const b = 2 * dot(vecCenterToOrigin, direct);
-  const c = dot(vecCenterToOrigin, vecCenterToOrigin) - r * r;
+  const b = -2 * dot(vecOriginToCenter, direct);
+  const c = dot(vecOriginToCenter, vecOriginToCenter) - r * r;
 
   const diff = b * b - 4 * a * c;
-  // console.log('a',origin, direct, sphere)
-  // debugger
+  // console.log(a, b, c, sphere, origin, direct, vecOriginToCenter, diff);
   if (diff < 0) {
     return { t1: Number.POSITIVE_INFINITY, t2: Number.POSITIVE_INFINITY };
   }
@@ -190,29 +189,33 @@ const pipe = (
   scene: Scene,
   ctx: CanvasRenderingContext2D,
 ) => {
-  const imgData = ctx.getImageData(0, 0, canvasW, canvasH);
-  for (let i = Math.floor(-canvasW / 2); i < Math.floor(canvasW / 2); i++) {
-    for (let j = Math.floor(-canvasH / 2); j < Math.floor(canvasH / 2); j++) {
+  const imgData = ctx.createImageData(canvasW, canvasH);
+  let counter = 0;
+  for (let i = 0; i < canvasW; i++) {
+    for (let j = 0; j < canvasH; j++) {
       const direct = switchCanvasToViewport(
         i,
         j,
         { width: canvasW, height: canvasH },
         { width: viewPortW, height: viewPortH, distance },
       );
+      // console.log('asdasd',origin,direct)
       const color = rayTrace(
         origin,
-        direct,
-        1,
+        vector(origin, direct),
+        distance,
         Number.POSITIVE_INFINITY,
         scene,
       );
-      // const count = Math.floor(canvasH / 2) - j + Math.floor(canvasW / 2) + i;
-      // console.log('rrr', count, color);
-      let count  = i+j;
-      imgData.data[4 * count] = color.r;
-      imgData.data[4 * count + 1] = color.g;
-      imgData.data[4 * count + 2] = color.b;
-      imgData.data[4 * count + 3] = color.a;
+      // if(direct.x === 250 && direct.y ===250){
+      //   console.log(color);
+      //   debugger
+      // }
+      imgData.data[4 * counter] = color.r;
+      imgData.data[4 * counter + 1] = color.g;
+      imgData.data[4 * counter + 2] = color.b;
+      imgData.data[4 * counter + 3] = color.a;
+      counter++;
     }
   }
   ctx.putImageData(imgData, 0, 0);
