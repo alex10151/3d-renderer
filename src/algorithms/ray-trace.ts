@@ -58,19 +58,27 @@ type Divide = number;
 /**
  *  相机大小
  */
+
+// 在你的定义里，默认canvas坐标系，左上角为（0，0），右下角为（width,height）,所以你的Scene显示的时候就按这个坐标系设置参数就行
+// canvas实际上是一个2维的光栅化引擎，三维的坐标需要转化成二维坐标在经过光栅化才能显示，canvas2dContext不支持shader，做复杂的三维模型显示可能会比较麻烦
+// 如果后续有更复杂的需求，可以看看webgGl的接口文档和fundamental，对场景模型建模的说明比较完善，如camera和viewport的定义会更加清晰，如你的光追模型应该默认使用的是perspectiveCamera的计算方式
+
 interface Camera {
   width: number;
   height: number;
+  // centerX?:number,
+  // centerY?:number,
 }
 
 /**
  *  视口大小
  */
-interface ViewPort {
+interface ViewPort {  
   width: number;
   height: number;
   distance: number; // z轴，ViewPort与Camera的距离
 }
+
 
 /**
  * 球的定义
@@ -150,6 +158,7 @@ const rayTrace = (
     let minSphere: Sphere | null = null;
     scene.sphere.map((item) => {
       const { t1, t2 } = getIntersectionSphere(origin, direct, item);
+
       if (t1 < tmax && t1 > tmin && t1 < mint) {
         mint = t1;
         minSphere = item;
@@ -190,13 +199,14 @@ const pipe = (
   ctx: CanvasRenderingContext2D,
 ) => {
   const imgData = ctx.createImageData(canvasW, canvasH);
+  console.log(canvasH,canvasW);
   let counter = 0;
   for (let i = 0; i < canvasW; i++) {
     for (let j = 0; j < canvasH; j++) {
       const direct = switchCanvasToViewport(
         i,
         j,
-        { width: canvasW, height: canvasH },
+        { width: canvasW, height: canvasH},
         { width: viewPortW, height: viewPortH, distance },
       );
       // console.log('asdasd',origin,direct)
